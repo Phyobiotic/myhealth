@@ -1,0 +1,7 @@
+{
+  "name": "myhealth-claims",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "your-build-command" // e.g., "cp -r src/* public/" for copying files
+  }
+}
