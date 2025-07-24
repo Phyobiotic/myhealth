@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyHealth | File a Claim</title>
+    <link rel="icon" type="image/png" href="favion.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 0.25rem 0; /* Reduced from 0.5rem to 0.25rem to make topbar thinner */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .logo {
+            flex-shrink: 0;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            max-height: 70px;
+            vertical-align: middle;
+        }
+
+        @media (min-width: 768px) {
+            .logo .logo-small {
+                display: none;
+            }
+            .logo .logo-large {
+                display: block;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .logo .logo-large {
+                display: none;
+            }
+            .logo .logo-small {
+                display: block;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-links .claim-button {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            line-height: 1.2;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links .claim-button:hover {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Claim Form Section */
+        .claim-section {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #1e293b;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .claim-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 6px 40px rgba(0,0,0,0.1);
+            max-width: 850px;
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.85rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #1a1a1a;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 0.85rem 3rem 0.85rem 0.85rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #1a1a1a;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input[type="date"] {
+            border-radius: 10px;
+            padding: 0.85rem;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .form-group input[type="date"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-group input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .file-upload-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        .file-upload-text {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Modal (Pop-up) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            max-width: 550px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #ef4444;
+        }
+
+        .modal-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content p {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section ul li a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #334155;
+            padding-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .claim-form {
+                padding: 2rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+
+            header .container {
+                max-width: none;
+                width: 100%;
+                padding: 0;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="myhealth.html">
+                        <img src="myhealth_big.png" alt="MyHealth Logo" class="logo-large">
+                        <img src="myhealth_small.png" alt="MyHealth Logo" class="logo-small">
+                    </a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="myhealth.html#plans">Plans</a></li>
+                    <li><a href="myhealth.html#about">About</a></li>
+                    <li><a href="myhealth.html#contact">Contact</a></li>
+                    <li><a href="claims.html" class="claim-button">File a Claim</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="claim-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>File a Claim</h2>
+                <p>Submit your claim quickly and easily with our streamlined process. We're here to support you every step of the way.</p>
+            </div>
+            <div class="claim-form">
+                <form id="claim-form">
+                    <div class="form-group">
+                        <label for="policy-number">Policy Number</label>
+                        <input type="text" id="policy-number" name="policy-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="claim-type">Claim Type</label>
+                        <select id="claim-type" name="claim-type" required>
+                            <option value="">Select Claim Type</option>
+                            <option value="medical">Medical</option>
+                            <option value="hospitalization">Hospitalization</option>
+                            <option value="surgical">Surgical</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="claim-date">Date of Incident</label>
+                        <input type="date" id="claim-date" name="claim-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="claim-description">Description of Claim</label>
+                        <textarea id="claim-description" name="claim-description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="documents">Upload Supporting Documents</label>
+                        <label class="file-upload-label" for="documents">Choose Files</label>
+                        <input type="file" id="documents" name="documents" multiple accept=".pdf,.jpg,.png">
+                        <div class="file-upload-text" id="file-upload-text">No files selected</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">Submit Claim</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="claim-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">×</span>
+            <h3>✅ Submission Received</h3>
+            <p>Thank you! Your claim has been successfully submitted. Our team will review it and contact you within 48 hours.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MyHealth</h3>
+                    <p>Providing trusted healthcare insurance solutions for over 40 years. Our commitment to you: No one dies in debt.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="myhealth.html#plans">Insurance Plans</a></li>
+                        <li><a href="claims.html">File a Claim</a></li>
+                        <li><a href="myhealth.html#network">Hospital Network</a></li>
+                        <li><a href="myhealth.html#careers">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="myhealth.html#help">Help Center</a></li>
+                        <li><a href="myhealth.html#contact">Contact Us</a></li>
+                        <li><a href="myhealth.html#faq">FAQ</a></li>
+                        <li><a href="myhealth.html#live-chat">Live Chat</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>📧 info@myhealth.sg</li>
+                        <li>📞 +65 6123 4567</li>
+                        <li>📍 123 Healthcare Ave, Singapore 123456</li>
+                        <li>🕒 24/7 Emergency Support</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 MyHealth Insurance Company. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('claim-form');
+        const modal = document.getElementById('claim-modal');
+        const modalClose = document.getElementById('modal-close');
+        const fileInput = document.getElementById('documents');
+        const fileText = document.getElementById('file-upload-text');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const policyNumber = document.getElementById('policy-number').value.trim();
+            const claimType = document.getElementById('claim-type').value;
+            const claimDate = document.getElementById('claim-date').value;
+            const claimDescription = document.getElementById('claim-description').value.trim();
+
+            if (policyNumber && claimType && claimDate && claimDescription) { 
+                modal.style.display = 'flex';
+                form.reset();
+                fileText.textContent = 'No files selected';
+            }
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileText.textContent = `${fileInput.files.length} file${fileInput.files.length > 1 ? 's' : ''} selected`;
+            } else {
+                fileText.textContent = 'No files selected';
+            }
+        });
+
+        // Smooth scroll for nav links back to myhealth.html
+        document.querySelectorAll('a[href^="myhealth.html"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                const targetId = href.split('#')[1];
+                window.location.href = href;
+                setTimeout(() => {
+                    const target = document.querySelector(`#${targetId}`);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 100); // Delay to ensure page load
+            });
+        });
+    </script>
+</body>
+</html>
